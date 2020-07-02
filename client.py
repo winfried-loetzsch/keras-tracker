@@ -19,11 +19,15 @@ def deregister(client_id):
 
 def progress(client_id, n, status):
     s_string = ""
+    progress = "" if n is None else str(n)
 
     for s in status:
         s_string += str(s) + "</br>"
 
-    requests.post('http://127.0.0.1:5000/status', json={'Id': client_id, 'Progress': str(n), 'Status': s_string[:-5]})
+    if len(s_string) > 0:
+        s_string = s_string[:-5]
+
+    requests.post('http://127.0.0.1:5000/status', json={'Id': client_id, 'Progress': progress, 'Status': s_string})
 
 
 def start_training(epochs, batch_size, samples):

@@ -8,10 +8,11 @@ from tensorflow.keras.optimizers import Adadelta
 from tensorflow_core.python.keras.utils.np_utils import to_categorical
 
 from assign_gpu import aquire_free_gpus
+from tracked_app import TrackedApp
 from tracker_callback import TrackerCallback
 
 
-def run_mnist():
+def run_mnist(app):
     batch_size = 128
     num_classes = 10
     epochs = 12
@@ -61,7 +62,7 @@ def run_mnist():
                   metrics=['accuracy'])
 
     model.fit(x_train, y_train,
-              callbacks=[TrackerCallback()],
+              callbacks=[TrackerCallback(app)],
               batch_size=batch_size,
               epochs=epochs,
               verbose=1,
@@ -69,4 +70,4 @@ def run_mnist():
 
 
 if __name__ == "__main__":
-    run_mnist()
+    TrackedApp(run_mnist).run()

@@ -193,15 +193,17 @@ def parse_deregister():
 @app.route('/status', methods=['GET', 'POST'])
 def parse_request():
     dataDict = json.loads(request.data)
-
-    cmd = "Insert into worker (Id, Status, Time) values (?,?,strftime('%s','now'))"
     conn = get_db()
-    conn.execute(cmd, (dataDict["Id"], dataDict["Status"]))
 
-    cmd = "Update worker_conf Set Progress=? Where Id=?"
-    conn.execute(cmd, (dataDict["Progress"], dataDict["Id"]))
+    if dataDict["Status"] != "":
+        cmd = "Insert into worker (Id, Status, Time) values (?,?,strftime('%s','now'))"
+        conn.execute(cmd, (dataDict["Id"], dataDict["Status"]))
+
+    if dataDict["Progress"] != "":
+        cmd = "Update worker_conf Set Progress=? Where Id=?"
+        conn.execute(cmd, (dataDict["Progress"], dataDict["Id"]))
+
     conn.commit()
-
     return "OK"
 
 
